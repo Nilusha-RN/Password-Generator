@@ -10,7 +10,12 @@ try:
         print("Password length must be at least 4.")
 
     else:
-        characters = string.ascii_letters + string.digits + string.punctuation
+        use_uppercase = input("Include uppercase letters? (yes/no): ").lower()
+
+        characters = string.ascii_lowercase + string.digits + string.punctuation
+
+        if use_uppercase == "yes":
+            characters += string.ascii_uppercase
 
         password = ""
 
