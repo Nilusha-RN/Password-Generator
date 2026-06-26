@@ -3,13 +3,21 @@ import string
 
 print("=== Password Generator ===")
 
-length = int(input("Enter your password length: "))
+try:
+    length = int(input("Enter password length: "))
 
-characters = string.ascii_letters + string.digits + string.punctuation
+    if length < 4:
+        print("Password length must be at least 4.")
 
-password = ""
+    else:
+        characters = string.ascii_letters + string.digits + string.punctuation
 
-for i in range(length):
-    password += random.choice(characters)
+        password = ""
 
-print("Generated Password:", password)
+        for i in range(length):
+            password += random.choice(characters)
+
+        print("Generated Password:", password)
+
+except ValueError:
+    print("Please enter a valid number.")
