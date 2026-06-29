@@ -16,27 +16,39 @@ try:
         use_symbols = input("Include symbols? (yes/no): ").lower()
 
         characters = ""
+        password_list = []
 
         if use_uppercase == "yes":
             characters += string.ascii_uppercase
+            password_list.append(random.choice(string.ascii_uppercase))
 
         if use_lowercase == "yes":
             characters += string.ascii_lowercase
+            password_list.append(random.choice(string.ascii_lowercase))
 
         if use_numbers == "yes":
             characters += string.digits
+            password_list.append(random.choice(string.digits))
 
         if use_symbols == "yes":
             characters += string.punctuation
+            password_list.append(random.choice(string.punctuation))
 
         if characters == "":
             print("You must select at least one character type.")
 
-        else:
-            password = ""
+        elif length < len(password_list):
+            print("Password length is too short for selected options.")
 
-            for i in range(length):
-                password += random.choice(characters)
+        else:
+            remaining_length = length - len(password_list)
+
+            for i in range(remaining_length):
+                password_list.append(random.choice(characters))
+
+            random.shuffle(password_list)
+
+            password = "".join(password_list)
 
             print("Generated Password:", password)
 
