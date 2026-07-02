@@ -31,6 +31,21 @@ def save_password(password, strength):
         file.write(f"{date_time} | {password} | Strength: {strength}\n")
 
 
+def view_history():
+    try:
+        with open("password_history.txt", "r") as file:
+            history = file.read()
+
+            if history == "":
+                print("No password history found.")
+            else:
+                print("\n=== Password History ===")
+                print(history)
+
+    except FileNotFoundError:
+        print("No password history found.")
+
+
 def generate_password():
     try:
         length = int(input("Enter password length: "))
@@ -91,13 +106,16 @@ def generate_password():
 while True:
     print("\n=== Password Generator ===")
     print("1. Generate Password")
-    print("2. Exit")
+    print("2. View Password History")
+    print("3. Exit")
 
     choice = input("Enter your choice: ")
 
     if choice == "1":
         generate_password()
     elif choice == "2":
+        view_history()
+    elif choice == "3":
         print("Thank you for using Password Generator.")
         break
     else:
