@@ -1,5 +1,6 @@
 import random
 import string
+from datetime import datetime
 
 
 def check_strength(password):
@@ -7,16 +8,12 @@ def check_strength(password):
 
     if len(password) >= 8:
         score += 1
-
     if any(char.islower() for char in password):
         score += 1
-
     if any(char.isupper() for char in password):
         score += 1
-
     if any(char.isdigit() for char in password):
         score += 1
-
     if any(char in string.punctuation for char in password):
         score += 1
 
@@ -26,6 +23,12 @@ def check_strength(password):
         return "Medium"
     else:
         return "Strong"
+
+
+def save_password(password, strength):
+    with open("password_history.txt", "a") as file:
+        date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        file.write(f"{date_time} | {password} | Strength: {strength}\n")
 
 
 def generate_password():
@@ -68,17 +71,18 @@ def generate_password():
             print("Password length is too short for selected options.")
             return
 
-        remaining_length = length - len(password_list)
-
-        for i in range(remaining_length):
+        for i in range(length - len(password_list)):
             password_list.append(random.choice(characters))
 
         random.shuffle(password_list)
-
         password = "".join(password_list)
+        strength = check_strength(password)
 
         print("\nGenerated Password:", password)
-        print("Password Strength:", check_strength(password))
+        print("Password Strength:", strength)
+
+        save_password(password, strength)
+        print("Password saved to password_history.txt")
 
     except ValueError:
         print("Please enter a valid number.")
@@ -93,10 +97,8 @@ while True:
 
     if choice == "1":
         generate_password()
-
     elif choice == "2":
         print("Thank you for using Password Generator.")
         break
-
     else:
         print("Invalid choice. Please try again.")
