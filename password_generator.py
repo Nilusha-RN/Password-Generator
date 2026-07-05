@@ -1,3 +1,4 @@
+import pyperclip
 import random
 import string
 from datetime import datetime
@@ -54,51 +55,88 @@ def generate_password():
             print("Password length must be at least 4.")
             return
 
+        count = int(input("How many passwords do you want to generate? "))
+
+        if count < 1:
+            print("Please enter at least 1 password.")
+            return
+
         use_uppercase = input("Include uppercase letters? (yes/no): ").lower()
         use_lowercase = input("Include lowercase letters? (yes/no): ").lower()
         use_numbers = input("Include numbers? (yes/no): ").lower()
         use_symbols = input("Include symbols? (yes/no): ").lower()
 
         characters = ""
-        password_list = []
 
         if use_uppercase == "yes":
             characters += string.ascii_uppercase
-            password_list.append(random.choice(string.ascii_uppercase))
 
         if use_lowercase == "yes":
             characters += string.ascii_lowercase
-            password_list.append(random.choice(string.ascii_lowercase))
 
         if use_numbers == "yes":
             characters += string.digits
-            password_list.append(random.choice(string.digits))
 
         if use_symbols == "yes":
             characters += string.punctuation
-            password_list.append(random.choice(string.punctuation))
 
         if characters == "":
             print("You must select at least one character type.")
             return
 
-        if length < len(password_list):
+        required = 0
+
+        if use_uppercase == "yes":
+            required += 1
+        if use_lowercase == "yes":
+            required += 1
+        if use_numbers == "yes":
+            required += 1
+        if use_symbols == "yes":
+            required += 1
+
+        if length < required:
             print("Password length is too short for selected options.")
             return
 
-        for i in range(length - len(password_list)):
-            password_list.append(random.choice(characters))
+        print("\n=== Generated Passwords ===")
 
-        random.shuffle(password_list)
-        password = "".join(password_list)
-        strength = check_strength(password)
+        for number in range(count):
+            password_list = []
 
-        print("\nGenerated Password:", password)
-        print("Password Strength:", strength)
+            if use_uppercase == "yes":
+                password_list.append(random.choice(string.ascii_uppercase))
 
-        save_password(password, strength)
-        print("Password saved to password_history.txt")
+            if use_lowercase == "yes":
+                password_list.append(random.choice(string.ascii_lowercase))
 
+            if use_numbers == "yes":
+                password_list.append(random.choice(string.digits))
+
+            if use_symbols == "yes":
+                password_list.append(random.choice(string.punctuation))
+
+            for i in range(length - len(password_list)):
+                password_list.append(random.choice(characters))
+
+            random.shuffle(password_list)
+
+            password = "".join(password_list)
+            strength = check_strength(password)
+
+            print(f"\nPassword {number + 1}: {password}")
+            print("Strength:", strength)
+
+            copy_choice = input("Copy this password to clipboard? (yes/no): ").lower()
+
+            if copy_choice == "yes":
+                pyperclip.copy(password)
+                print("Password copied to clipboard.")
+            
+            save_password(password, strength)
+            
+        print(f"\n{count} password(s) saved to password_history.txt")
+        
     except ValueError:
         print("Please enter a valid number.")
 
